@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "trojan-course-api": "^2.2.2"
+  }
+}

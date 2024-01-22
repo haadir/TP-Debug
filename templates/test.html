@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Search Interface</title>
+    <style>
+        #results {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="search-form">
+        <button type="submit">Display CSCI Courses</button>
+    </form>
+    
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            var resultsContainer = document.getElementById('results');
+    
+            fetch('/api/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: 'CSCI' }) // Sending a predefined query
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous results
+                resultsContainer.innerHTML = '';
+    
+                // Display new results
+                if (data.courses && data.courses.length > 0) {
+                    data.courses.forEach(course => {
+                        let courseElement = document.createElement('div');
+                        courseElement.innerHTML = `<strong>${course.id}</strong>: ${course.title}`;
+                        resultsContainer.appendChild(courseElement);
+                    });
+                } else {
+                    resultsContainer.textContent = 'No CSCI courses found.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultsContainer.textContent = 'An error occurred while fetching results.';
+            });
+        });
+    </script>
+
+</body>
+</html>
